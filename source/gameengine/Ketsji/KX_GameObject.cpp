@@ -95,11 +95,13 @@
 
 /* EEVEE INTEGRATION */
 extern "C" {
-#  include "DRW_render.h"
+#  include "BKE_particle.h"
 #  include "BLI_alloca.h"
+#  include "BLI_listbase.h"
+#  include "DNA_modifier_types.h"
+#  include "DRW_render.h"
 #  include "GPU_immediate.h"
 #  include "eevee_private.h"
-#  include "BLI_listbase.h"
 }
 /* End of EEVEE INTEGRATION */
 
@@ -245,6 +247,21 @@ void KX_GameObject::AddMaterialBatches()
 					continue; // I think it's not needed but it costs nothing
 				}
 				m_materialBatches.push_back(mat_geom[i]);
+			}
+		}
+		for (ModifierData *md = (ModifierData *)ob->modifiers.first; md; md = (ModifierData *)md->next) {
+			if (md->type == eModifierType_ParticleSystem) {
+				ParticleSystem *psys = ((ParticleSystemModifierData *)md)->psys;
+
+				if (psys_check_enabled(ob, psys, false)) {
+					ParticleSettings *part = psys->part;
+					int draw_as = (part->draw_as == PART_DRAW_REND) ? part->ren_as : part->draw_as;
+
+					if (draw_as == PART_DRAW_PATH && (psys->pathcache || psys->childcache)) {
+						struct Gwn_Batch *hair_geom = DRW_cache_particles_get_hair(psys, md);
+						m_materialBatches.push_back(hair_geom);
+					}
+				}
 			}
 		}
 	}

@@ -1369,13 +1369,13 @@ void EEVEE_materials_cache_populate(EEVEE_Data *vedata, EEVEE_ViewLayerData *sld
 							float *spec_p = &ma->spec;
 							float *rough_p = &ma->gloss_mir;
 
-							DRW_shgroup_call_add(stl->g_data->depth_shgrp, hair_geom, mat);
-							DRW_shgroup_call_add(stl->g_data->depth_shgrp_clip, hair_geom, mat);
+							DRW_shgroup_call_object_add(stl->g_data->depth_shgrp, hair_geom, ob);
+							DRW_shgroup_call_object_add(stl->g_data->depth_shgrp_clip, hair_geom, ob);
 
 							shgrp = BLI_ghash_lookup(material_hash, (const void *)ma);
 
 							if (shgrp) {
-								DRW_shgroup_call_add(shgrp, hair_geom, mat);
+								DRW_shgroup_call_object_add(shgrp, hair_geom, ob);
 							}
 							else {
 								if (ma->use_nodes && ma->nodetree) {
@@ -1387,7 +1387,7 @@ void EEVEE_materials_cache_populate(EEVEE_Data *vedata, EEVEE_ViewLayerData *sld
 
 										BLI_ghash_insert(material_hash, ma, shgrp);
 
-										DRW_shgroup_call_add(shgrp, hair_geom, mat);
+										DRW_shgroup_call_object_add(shgrp, hair_geom, ob);
 									}
 									else {
 										/* Shader failed : pink color */
@@ -1409,7 +1409,7 @@ void EEVEE_materials_cache_populate(EEVEE_Data *vedata, EEVEE_ViewLayerData *sld
 
 									BLI_ghash_insert(material_hash, ma, shgrp);
 
-									DRW_shgroup_call_add(shgrp, hair_geom, mat);
+									DRW_shgroup_call_object_add(shgrp, hair_geom, ob);
 								}
 							}
 						}
