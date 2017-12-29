@@ -25,13 +25,13 @@
  * ***** END GPL LICENSE BLOCK *****
  */
 
-/** \file gameengine/Rasterizer/RAS_MeshObject.cpp
+/** \file gameengine/Rasterizer/RAS_GameObject.cpp
  *  \ingroup bgerast
  */
 
 #include "DNA_mesh_types.h"
 
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_MeshUser.h"
 #include "RAS_BoundingBoxManager.h"
 #include "RAS_Polygon.h"
@@ -61,7 +61,7 @@ extern "C" {
 
 // polygon sorting
 
-struct RAS_MeshObject::polygonSlot
+struct RAS_GameObject::polygonSlot
 {
 	float m_z;
 	int m_index[4];
@@ -95,7 +95,7 @@ struct RAS_MeshObject::polygonSlot
 	}
 };
 
-struct RAS_MeshObject::backtofront
+struct RAS_GameObject::backtofront
 {
 	bool operator()(const polygonSlot &a, const polygonSlot &b) const
 	{
@@ -103,7 +103,7 @@ struct RAS_MeshObject::backtofront
 	}
 };
 
-struct RAS_MeshObject::fronttoback
+struct RAS_GameObject::fronttoback
 {
 	bool operator()(const polygonSlot &a, const polygonSlot &b) const
 	{
@@ -113,7 +113,7 @@ struct RAS_MeshObject::fronttoback
 
 // mesh object
 
-RAS_MeshObject::RAS_MeshObject(Mesh *mesh, const LayersInfo& layersInfo)
+RAS_GameObject::RAS_GameObject(Mesh *mesh, const LayersInfo& layersInfo)
 	:m_name(mesh->id.name + 2),
 	m_layersInfo(layersInfo),
 	m_boundingBox(nullptr),
@@ -121,7 +121,7 @@ RAS_MeshObject::RAS_MeshObject(Mesh *mesh, const LayersInfo& layersInfo)
 {
 }
 
-RAS_MeshObject::~RAS_MeshObject()
+RAS_GameObject::~RAS_GameObject()
 {
 	std::vector<RAS_Polygon *>::iterator it;
 
@@ -137,12 +137,12 @@ RAS_MeshObject::~RAS_MeshObject()
 	m_materials.clear();
 }
 
-int RAS_MeshObject::NumMaterials()
+int RAS_GameObject::NumMaterials()
 {
 	return m_materials.size();
 }
 
-const std::string RAS_MeshObject::GetMaterialName(unsigned int matid)
+const std::string RAS_GameObject::GetMaterialName(unsigned int matid)
 {
 	RAS_MeshMaterial *mmat = GetMeshMaterial(matid);
 
@@ -152,7 +152,7 @@ const std::string RAS_MeshObject::GetMaterialName(unsigned int matid)
 	return "";
 }
 
-RAS_MeshMaterial *RAS_MeshObject::GetMeshMaterial(unsigned int matid) const
+RAS_MeshMaterial *RAS_GameObject::GetMeshMaterial(unsigned int matid) const
 {
 	if (m_materials.size() > matid) {
 		return m_materials[matid];
@@ -161,7 +161,7 @@ RAS_MeshMaterial *RAS_MeshObject::GetMeshMaterial(unsigned int matid) const
 	return nullptr;
 }
 
-RAS_MeshMaterial *RAS_MeshObject::GetMeshMaterialBlenderIndex(unsigned int index)
+RAS_MeshMaterial *RAS_GameObject::GetMeshMaterialBlenderIndex(unsigned int index)
 {
 	for (RAS_MeshMaterialList::iterator mit = m_materials.begin(); mit != m_materials.end(); mit++) {
 		RAS_MeshMaterial *meshmat = *mit;
@@ -173,22 +173,22 @@ RAS_MeshMaterial *RAS_MeshObject::GetMeshMaterialBlenderIndex(unsigned int index
 	return nullptr;
 }
 
-int RAS_MeshObject::NumPolygons()
+int RAS_GameObject::NumPolygons()
 {
 	return m_polygons.size();
 }
 
-RAS_Polygon *RAS_MeshObject::GetPolygon(int num) const
+RAS_Polygon *RAS_GameObject::GetPolygon(int num) const
 {
 	return m_polygons[num];
 }
 
-std::string& RAS_MeshObject::GetName()
+std::string& RAS_GameObject::GetName()
 {
 	return m_name;
 }
 
-const std::string RAS_MeshObject::GetTextureName(unsigned int matid)
+const std::string RAS_GameObject::GetTextureName(unsigned int matid)
 {
 	RAS_MeshMaterial *mmat = GetMeshMaterial(matid);
 
@@ -198,7 +198,7 @@ const std::string RAS_MeshObject::GetTextureName(unsigned int matid)
 	return "";
 }
 
-RAS_MeshMaterial *RAS_MeshObject::AddMaterial(RAS_MaterialBucket *bucket, unsigned int index, const RAS_TexVertFormat& format)
+RAS_MeshMaterial *RAS_GameObject::AddMaterial(RAS_MaterialBucket *bucket, unsigned int index, const RAS_TexVertFormat& format)
 {
 	RAS_MeshMaterial *meshmat = GetMeshMaterialBlenderIndex(index);
 
@@ -211,7 +211,7 @@ RAS_MeshMaterial *RAS_MeshObject::AddMaterial(RAS_MaterialBucket *bucket, unsign
 	return meshmat;
 }
 
-void RAS_MeshObject::AddLine(RAS_MeshMaterial *meshmat, unsigned int v1, unsigned int v2)
+void RAS_GameObject::AddLine(RAS_MeshMaterial *meshmat, unsigned int v1, unsigned int v2)
 {
 	// create a new polygon
 	RAS_IDisplayArray *darray = meshmat->GetDisplayArray();
@@ -219,7 +219,7 @@ void RAS_MeshObject::AddLine(RAS_MeshMaterial *meshmat, unsigned int v1, unsigne
 	darray->AddIndex(v2);
 }
 
-RAS_Polygon *RAS_MeshObject::AddPolygon(RAS_MeshMaterial *meshmat, int numverts, unsigned int indices[4],
+RAS_Polygon *RAS_GameObject::AddPolygon(RAS_MeshMaterial *meshmat, int numverts, unsigned int indices[4],
 										bool visible, bool collider, bool twoside)
 {
 	// add it to the bucket, this also adds new display arrays
@@ -255,7 +255,7 @@ RAS_Polygon *RAS_MeshObject::AddPolygon(RAS_MeshMaterial *meshmat, int numverts,
 	return poly;
 }
 
-unsigned int RAS_MeshObject::AddVertex(
+unsigned int RAS_GameObject::AddVertex(
 				RAS_MeshMaterial *meshmat,
 				const MT_Vector3& xyz,
 				const MT_Vector2 * const uvs,
@@ -305,7 +305,7 @@ unsigned int RAS_MeshObject::AddVertex(
 	return offset;
 }
 
-RAS_IDisplayArray *RAS_MeshObject::GetDisplayArray(unsigned int matid) const
+RAS_IDisplayArray *RAS_GameObject::GetDisplayArray(unsigned int matid) const
 {
 	RAS_MeshMaterial *mmat = GetMeshMaterial(matid);
 
@@ -317,7 +317,7 @@ RAS_IDisplayArray *RAS_MeshObject::GetDisplayArray(unsigned int matid) const
 	return array;
 }
 
-RAS_ITexVert *RAS_MeshObject::GetVertex(unsigned int matid, unsigned int index)
+RAS_ITexVert *RAS_GameObject::GetVertex(unsigned int matid, unsigned int index)
 {
 	RAS_IDisplayArray *array = GetDisplayArray(matid);
 
@@ -328,19 +328,19 @@ RAS_ITexVert *RAS_MeshObject::GetVertex(unsigned int matid, unsigned int index)
 	return nullptr;
 }
 
-const float *RAS_MeshObject::GetVertexLocation(unsigned int orig_index)
+const float *RAS_GameObject::GetVertexLocation(unsigned int orig_index)
 {
 	std::vector<SharedVertex>& sharedmap = m_sharedvertex_map[orig_index];
 	std::vector<SharedVertex>::iterator it = sharedmap.begin();
 	return it->m_darray->GetVertex(it->m_offset)->getXYZ();
 }
 
-RAS_BoundingBox *RAS_MeshObject::GetBoundingBox() const
+RAS_BoundingBox *RAS_GameObject::GetBoundingBox() const
 {
 	return m_boundingBox;
 }
 
-RAS_MeshUser* RAS_MeshObject::AddMeshUser(void *clientobj, RAS_Deformer *deformer)
+RAS_MeshUser* RAS_GameObject::AddMeshUser(void *clientobj, RAS_Deformer *deformer)
 {
 	RAS_BoundingBox *boundingBox = (deformer) ? deformer->GetBoundingBox() : m_boundingBox;
 	RAS_MeshUser *meshUser = new RAS_MeshUser(clientobj, boundingBox);
@@ -368,7 +368,7 @@ RAS_MeshUser* RAS_MeshObject::AddMeshUser(void *clientobj, RAS_Deformer *deforme
 	return meshUser;
 }
 
-void RAS_MeshObject::EndConversion(RAS_BoundingBoxManager *boundingBoxManager)
+void RAS_GameObject::EndConversion(RAS_BoundingBoxManager *boundingBoxManager)
 {
 #if 0
 	m_sharedvertex_map.clear(); // SharedVertex
@@ -404,12 +404,12 @@ void RAS_MeshObject::EndConversion(RAS_BoundingBoxManager *boundingBoxManager)
 	m_boundingBox->Update(true);
 }
 
-const RAS_MeshObject::LayersInfo& RAS_MeshObject::GetLayersInfo() const
+const RAS_GameObject::LayersInfo& RAS_GameObject::GetLayersInfo() const
 {
 	return m_layersInfo;
 }
 
-void RAS_MeshObject::SortPolygons(RAS_IDisplayArray *array, const MT_Transform &transform, unsigned int *indexmap)
+void RAS_GameObject::SortPolygons(RAS_IDisplayArray *array, const MT_Transform &transform, unsigned int *indexmap)
 {
 	// Limitations: sorting is quite simple, and handles many
 	// cases wrong, partially due to polygons being sorted per
@@ -457,7 +457,7 @@ void RAS_MeshObject::SortPolygons(RAS_IDisplayArray *array, const MT_Transform &
 }
 
 
-bool RAS_MeshObject::HasColliderPolygon()
+bool RAS_GameObject::HasColliderPolygon()
 {
 	int numpolys = NumPolygons();
 	for (int p = 0; p < numpolys; p++) {
@@ -469,7 +469,7 @@ bool RAS_MeshObject::HasColliderPolygon()
 }
 
 /*****************EEVEE INTEGRATION*******************/
-std::vector<Gwn_Batch *>RAS_MeshObject::GetMaterialBatches()
+std::vector<Gwn_Batch *>RAS_GameObject::GetMaterialBatches()
 {
 	if (m_materialBatches.size() > 0) {
 		return m_materialBatches;
@@ -488,7 +488,7 @@ std::vector<Gwn_Batch *>RAS_MeshObject::GetMaterialBatches()
 	return m_materialBatches;
 }
 
-std::vector<DRWShadingGroup *>RAS_MeshObject::GetMaterialShadingGroups()
+std::vector<DRWShadingGroup *>RAS_GameObject::GetMaterialShadingGroups()
 {
 	if (m_materialShGroups.size() > 0) {
 		return m_materialShGroups;

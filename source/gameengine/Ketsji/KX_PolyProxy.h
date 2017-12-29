@@ -37,7 +37,7 @@
 #include "SCA_IObject.h"
 
 class KX_MeshProxy;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_Polygon;
 
 class KX_PolyProxy : public CValue
@@ -46,9 +46,9 @@ class KX_PolyProxy : public CValue
 protected:
 	KX_MeshProxy *m_meshProxy;
 	RAS_Polygon* m_polygon;
-	RAS_MeshObject*	m_mesh;
+	RAS_GameObject*	m_mesh;
 public:
-	KX_PolyProxy(KX_MeshProxy *meshProxy, RAS_MeshObject *mesh, RAS_Polygon *polygon);
+	KX_PolyProxy(KX_MeshProxy *meshProxy, RAS_GameObject *mesh, RAS_Polygon *polygon);
 	virtual ~KX_PolyProxy();
 
 	// stuff for cvalue related things

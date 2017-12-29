@@ -37,7 +37,7 @@
 #include "BL_ShapeDeformer.h"
 #include <string>
 #include "RAS_IPolygonMaterial.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 
 #include "DNA_anim_types.h"
 #include "DNA_armature_types.h"
@@ -68,7 +68,7 @@ extern "C" {
 
 BL_ShapeDeformer::BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
                                    Object *bmeshobj,
-                                   RAS_MeshObject *mesh)
+                                   RAS_GameObject *mesh)
 	:BL_SkinDeformer(gameobj, bmeshobj, mesh),
 	m_useShapeDrivers(false),
 	m_lastShapeUpdate(-1)
@@ -80,7 +80,7 @@ BL_ShapeDeformer::BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
 BL_ShapeDeformer::BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
                                    Object *bmeshobj_old,
                                    Object *bmeshobj_new,
-                                   RAS_MeshObject *mesh,
+                                   RAS_GameObject *mesh,
                                    bool release_object,
                                    bool recalc_normal,
                                    BL_ArmatureObject *arma)

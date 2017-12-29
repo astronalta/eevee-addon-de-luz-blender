@@ -33,7 +33,7 @@
 #define __RAS_IPOLYGONMATERIAL_H__
 
 #include "RAS_Texture.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 
 #include "MT_Vector4.h"
 

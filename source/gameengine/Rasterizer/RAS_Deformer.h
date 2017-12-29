@@ -45,7 +45,7 @@
 #include "RAS_DisplayArrayBucket.h" // For RAS_DisplayArrayBucketList.
 
 struct DerivedMesh;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_IPolyMaterial;
 class RAS_MeshMaterial;
 class SCA_IObject;
@@ -53,7 +53,7 @@ class SCA_IObject;
 class RAS_Deformer
 {
 public:
-	RAS_Deformer(RAS_MeshObject *mesh)
+	RAS_Deformer(RAS_GameObject *mesh)
 		:m_mesh(mesh),
 		m_bDynamic(false),
 		m_boundingBox(nullptr)
@@ -92,7 +92,7 @@ public:
 	{
 		return nullptr;
 	}
-	virtual class RAS_MeshObject* GetRasMesh()
+	virtual class RAS_GameObject* GetRasMesh()
 	{
 		return nullptr;
 	}
@@ -106,7 +106,7 @@ public:
 	void AddDisplayArray(RAS_IDisplayArray *array, RAS_DisplayArrayBucket *arrayBucket);
 
 protected:
-	RAS_MeshObject *m_mesh;
+	RAS_GameObject *m_mesh;
 	bool m_bDynamic;
 
 	RAS_IDisplayArrayList m_displayArrayList;

@@ -28,7 +28,7 @@
 #define __KX_LOD_LEVEL_H__
 
 #include "EXP_PyObjectPlus.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 
 class KX_LodLevel : public PyObjectPlus
 {
@@ -38,17 +38,17 @@ private:
 	float m_hysteresis;
 	short m_level;
 	unsigned short m_flags;
-	RAS_MeshObject *m_meshobj;
+	RAS_GameObject *m_meshobj;
 
 public:
-	KX_LodLevel(float distance, float hysteresis, unsigned short level, RAS_MeshObject *meshobj, unsigned short flag);
+	KX_LodLevel(float distance, float hysteresis, unsigned short level, RAS_GameObject *meshobj, unsigned short flag);
 	virtual ~KX_LodLevel();
 
 	float GetDistance() const;
 	float GetHysteresis() const;
 	unsigned short GetLevel() const;
 	unsigned short GetFlag() const;
-	RAS_MeshObject *GetMesh() const;
+	RAS_GameObject *GetMesh() const;
 
 	enum {
 		/// Use custom hysteresis for this level.

@@ -56,7 +56,7 @@ struct KX_ClientObjectInfo;
 class KX_RayCast;
 class KX_LodManager;
 class KX_CullingNode;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_MeshUser;
 class PHY_IGraphicController;
 class PHY_IPhysicsEnvironment;
@@ -105,7 +105,7 @@ protected:
 	std::string							m_name;
 	std::string							m_text;
 	int									m_layer;
-	std::vector<RAS_MeshObject*>		m_meshes;
+	std::vector<RAS_GameObject*>		m_meshes;
 	KX_LodManager						*m_lodManager;
 	short								m_currentLodLevel;
 	RAS_MeshUser						*m_meshUser;
@@ -756,7 +756,7 @@ public:
 	 */
 		void
 	AddMesh(
-		RAS_MeshObject* mesh
+		RAS_GameObject* mesh
 	) {
 		m_meshes.push_back(mesh);
 	}
@@ -777,7 +777,7 @@ public:
 	/**
 	 * Pick out a mesh associated with the integer 'num'.
 	 */
-		RAS_MeshObject*
+		RAS_GameObject*
 	GetMesh(
 		int num
 	) const { 

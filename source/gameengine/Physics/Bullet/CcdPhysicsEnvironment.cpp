@@ -42,7 +42,7 @@
 #include "KX_GameObject.h"
 #include "KX_Globals.h" // for KX_RasterizerDrawDebugLine
 #include "KX_BlenderSceneConverter.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_Polygon.h"
 #include "RAS_ITexVert.h"
 
@@ -1867,7 +1867,7 @@ struct  DbvtCullingCallback : btDbvt::ICollide {
 				float face = (gameobj->IsNegativeScaling()) ? -1.0f : 1.0f;
 				// walk through the meshes and for each add to buffer
 				for (int i = 0; i < gameobj->GetMeshCount(); i++) {
-					RAS_MeshObject *meshobj = gameobj->GetMesh(i);
+					RAS_GameObject *meshobj = gameobj->GetMesh(i);
 					const float *v1, *v2, *v3, *v4;
 
 					int polycount = meshobj->NumPolygons();
@@ -2670,7 +2670,7 @@ CcdPhysicsEnvironment *CcdPhysicsEnvironment::Create(Scene *blenderscene, bool v
 	return ccdPhysEnv;
 }
 
-void CcdPhysicsEnvironment::ConvertObject(KX_BlenderSceneConverter& converter, KX_GameObject *gameobj, RAS_MeshObject *meshobj,
+void CcdPhysicsEnvironment::ConvertObject(KX_BlenderSceneConverter& converter, KX_GameObject *gameobj, RAS_GameObject *meshobj,
 										  DerivedMesh *dm, KX_Scene *kxscene, PHY_ShapeProps *shapeprops, PHY_IMotionState *motionstate,
 										  int activeLayerBitInfo, bool isCompoundChild, bool hasCompoundChildren)
 {

@@ -44,7 +44,7 @@
 #include "DNA_scene_types.h"
 #include "RAS_FrameBuffer.h"
 #include "RAS_CameraData.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_Polygon.h"
 #include "RAS_ITexVert.h"
 #include "BLI_math.h"

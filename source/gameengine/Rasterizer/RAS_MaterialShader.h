@@ -1,7 +1,7 @@
 #ifndef __RAS_MATERIAL_SHADER_H__
 #define __RAS_MATERIAL_SHADER_H__
 
-#include "RAS_MeshObject.h" // For RAS_MeshObject::LayersInfo.
+#include "RAS_GameObject.h" // For RAS_GameObject::LayersInfo.
 
 class RAS_MeshUser;
 class RAS_Rasterizer;

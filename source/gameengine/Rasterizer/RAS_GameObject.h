@@ -25,12 +25,12 @@
  * ***** END GPL LICENSE BLOCK *****
  */
 
-/** \file RAS_MeshObject.h
+/** \file RAS_GameObject.h
  *  \ingroup bgerast
  */
 
-#ifndef __RAS_MESHOBJECT_H__
-#define __RAS_MESHOBJECT_H__
+#ifndef __RAS_GameObject_H__
+#define __RAS_GameObject_H__
 
 #ifdef _MSC_VER
 /* disable the STL warnings ("debug information length > 255") */
@@ -62,11 +62,11 @@ struct DRWShadingGroup;
 struct Gwn_Batch;
 /*********************/
 
-/* RAS_MeshObject is a mesh used for rendering. It stores polygons,
+/* RAS_GameObject is a mesh used for rendering. It stores polygons,
  * but the actual vertices and index arrays are stored in material
  * buckets, referenced by the list of RAS_MeshMaterials. */
 
-class RAS_MeshObject
+class RAS_GameObject
 {
 public:
 	/** Additionals data stored in mesh layers. These datas can be the colors layer or the
@@ -118,8 +118,8 @@ protected:
 
 public:
 	// for now, meshes need to be in a certain layer (to avoid sorting on lights in realtime)
-	RAS_MeshObject(Mesh *mesh, const LayersInfo& layersInfo);
-	virtual ~RAS_MeshObject();
+	RAS_GameObject(Mesh *mesh, const LayersInfo& layersInfo);
+	virtual ~RAS_GameObject();
 
 
 	/* EEVEE INTEGRATION */
@@ -191,4 +191,4 @@ public:
 	std::vector<std::vector<SharedVertex> > m_sharedvertex_map;
 };
 
-#endif  // __RAS_MESHOBJECT_H__
+#endif  // __RAS_GameObject_H__

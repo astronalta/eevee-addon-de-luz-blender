@@ -32,7 +32,7 @@
 #include "CcdPhysicsEnvironment.h"
 
 #include "RAS_DisplayArray.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_Polygon.h"
 #include "RAS_Deformer.h"
 #include "KX_GameObject.h"
@@ -477,7 +477,7 @@ bool CcdPhysicsController::CreateSoftbody()
 
 	///create a mapping between graphics mesh vertices and soft body vertices
 	{
-		RAS_MeshObject *rasMesh = GetShapeInfo()->GetMesh();
+		RAS_GameObject *rasMesh = GetShapeInfo()->GetMesh();
 
 		if (rasMesh && !m_softbodyMappingDone) {
 			RAS_MeshMaterial *mmat;
@@ -1615,13 +1615,13 @@ bool CcdPhysicsController::IsPhysicsSuspended()
  * from_gameobj and from_meshobj can be nullptr
  *
  * when setting the mesh, the following vars get priority
- * 1) from_meshobj - creates the phys mesh from RAS_MeshObject
- * 2) from_gameobj - creates the phys mesh from the DerivedMesh where possible, else the RAS_MeshObject
- * 3) this - update the phys mesh from DerivedMesh or RAS_MeshObject
+ * 1) from_meshobj - creates the phys mesh from RAS_GameObject
+ * 2) from_gameobj - creates the phys mesh from the DerivedMesh where possible, else the RAS_GameObject
+ * 3) this - update the phys mesh from DerivedMesh or RAS_GameObject
  *
  * Most of the logic behind this is in m_shapeInfo->UpdateMesh(...)
  */
-bool CcdPhysicsController::ReinstancePhysicsShape(KX_GameObject *from_gameobj, RAS_MeshObject *from_meshobj, bool dupli)
+bool CcdPhysicsController::ReinstancePhysicsShape(KX_GameObject *from_gameobj, RAS_GameObject *from_meshobj, bool dupli)
 {
 	if (m_shapeInfo->m_shapeType != PHY_SHAPE_MESH)
 		return false;
@@ -1731,15 +1731,15 @@ void DefaultMotionState::CalculateWorldTransformations()
 }
 
 // Shape constructor
-std::map<RAS_MeshObject *, CcdShapeConstructionInfo *> CcdShapeConstructionInfo::m_meshShapeMap;
+std::map<RAS_GameObject *, CcdShapeConstructionInfo *> CcdShapeConstructionInfo::m_meshShapeMap;
 
-CcdShapeConstructionInfo *CcdShapeConstructionInfo::FindMesh(RAS_MeshObject *mesh, struct DerivedMesh *dm, bool polytope)
+CcdShapeConstructionInfo *CcdShapeConstructionInfo::FindMesh(RAS_GameObject *mesh, struct DerivedMesh *dm, bool polytope)
 {
 	if (polytope || dm)
 		// not yet supported
 		return nullptr;
 
-	std::map<RAS_MeshObject *, CcdShapeConstructionInfo *>::const_iterator mit = m_meshShapeMap.find(mesh);
+	std::map<RAS_GameObject *, CcdShapeConstructionInfo *>::const_iterator mit = m_meshShapeMap.find(mesh);
 	if (mit != m_meshShapeMap.end())
 		return mit->second;
 	return nullptr;
@@ -1766,7 +1766,7 @@ void CcdShapeConstructionInfo::ProcessReplica()
 	m_shapeArray.clear();
 }
 
-bool CcdShapeConstructionInfo::SetMesh(RAS_MeshObject *meshobj, DerivedMesh *dm, bool polytope)
+bool CcdShapeConstructionInfo::SetMesh(RAS_GameObject *meshobj, DerivedMesh *dm, bool polytope)
 {
 	int numpolys, numverts;
 
@@ -2058,7 +2058,7 @@ bool CcdShapeConstructionInfo::SetMesh(RAS_MeshObject *meshobj, DerivedMesh *dm,
 	// sharing only on static mesh at present, if you change that, you must also change in FindMesh
 	if (!polytope && !dm) {
 		// triangle shape can be shared, store the mesh object in the map
-		m_meshShapeMap.insert(std::pair<RAS_MeshObject *, CcdShapeConstructionInfo *>(meshobj, this));
+		m_meshShapeMap.insert(std::pair<RAS_GameObject *, CcdShapeConstructionInfo *>(meshobj, this));
 	}
 	return true;
 
@@ -2080,7 +2080,7 @@ cleanup_empty_mesh:
 /* Updates the arrays used by CreateBulletShape(),
  * take care that recalcLocalAabb() runs after CreateBulletShape is called.
  * */
-bool CcdShapeConstructionInfo::UpdateMesh(class KX_GameObject *gameobj, class RAS_MeshObject *meshobj)
+bool CcdShapeConstructionInfo::UpdateMesh(class KX_GameObject *gameobj, class RAS_GameObject *meshobj)
 {
 	int numpolys;
 	int numverts;
@@ -2387,7 +2387,7 @@ bool CcdShapeConstructionInfo::UpdateMesh(class KX_GameObject *gameobj, class RA
 	// Make sure to also replace the mesh in the shape map! Otherwise we leave dangling references when we free.
 	// Note, this whole business could cause issues with shared meshes. If we update one mesh, do we replace
 	// them all?
-	std::map<RAS_MeshObject *, CcdShapeConstructionInfo *>::iterator mit = m_meshShapeMap.find(m_meshObject);
+	std::map<RAS_GameObject *, CcdShapeConstructionInfo *>::iterator mit = m_meshShapeMap.find(m_meshObject);
 	if (mit != m_meshShapeMap.end()) {
 		m_meshShapeMap.erase(mit);
 		m_meshShapeMap[meshobj] = this;
@@ -2566,7 +2566,7 @@ CcdShapeConstructionInfo::~CcdShapeConstructionInfo()
 		delete m_triangleIndexVertexArray;
 	m_vertexArray.clear();
 	if (m_shapeType == PHY_SHAPE_MESH && m_meshObject != nullptr) {
-		std::map<RAS_MeshObject *, CcdShapeConstructionInfo *>::iterator mit = m_meshShapeMap.find(m_meshObject);
+		std::map<RAS_GameObject *, CcdShapeConstructionInfo *>::iterator mit = m_meshShapeMap.find(m_meshObject);
 		if (mit != m_meshShapeMap.end() && mit->second == this) {
 			m_meshShapeMap.erase(mit);
 		}

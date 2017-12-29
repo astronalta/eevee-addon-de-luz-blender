@@ -25,7 +25,7 @@
  */
 
 #include "RAS_DisplayArray.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 
 #include "GPU_glew.h"
 

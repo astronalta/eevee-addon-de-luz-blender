@@ -27,7 +27,7 @@
 #include "KX_LodLevel.h"
 #include "KX_MeshProxy.h"
 
-KX_LodLevel::KX_LodLevel(float distance, float hysteresis, unsigned short level, RAS_MeshObject *meshobj, unsigned short flag)
+KX_LodLevel::KX_LodLevel(float distance, float hysteresis, unsigned short level, RAS_GameObject *meshobj, unsigned short flag)
 	:m_distance(distance),
 	m_hysteresis(hysteresis),
 	m_level(level),
@@ -60,7 +60,7 @@ unsigned short KX_LodLevel::GetFlag() const
 	return m_flags;
 }
 
-RAS_MeshObject *KX_LodLevel::GetMesh() const
+RAS_GameObject *KX_LodLevel::GetMesh() const
 {
 	return m_meshobj;
 }

@@ -35,6 +35,7 @@
 #include "PHY_IPhysicsEnvironment.h"
 #include "PHY_IMotionState.h"
 
+class RAS_GameObject;
 /**
  * DummyPhysicsEnvironment  is an empty placeholder
  * Alternatives are ODE,Sumo and Dynamo PhysicsEnvironments
@@ -122,7 +123,7 @@ public:
 
 	virtual void ConvertObject(KX_BlenderSceneConverter& converter,
 							   KX_GameObject *gameobj,
-	                           RAS_MeshObject *meshobj,
+	                           RAS_GameObject *meshobj,
 	                           DerivedMesh *dm,
 	                           KX_Scene *kxscene,
 	                           PHY_ShapeProps *shapeprops,

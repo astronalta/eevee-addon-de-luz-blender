@@ -36,7 +36,7 @@
 #include "KX_Scene.h"
 #include "KX_GameObject.h"
 #include "KX_WorldInfo.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_BucketManager.h"
 #include "KX_PhysicsEngineEnums.h"
 #include "KX_KetsjiEngine.h"
@@ -114,7 +114,7 @@ void KX_BlenderConverter::SceneSlot::Merge(const KX_BlenderSceneConverter& conve
 	for (KX_BlenderMaterial *mat : converter.m_materials) {
 		m_materials.emplace_back(mat);
 	}
-	for (RAS_MeshObject *meshobj : converter.m_meshobjects) {
+	for (RAS_GameObject *meshobj : converter.m_meshobjects) {
 		m_meshobjects.emplace_back(meshobj);
 	}
 }
@@ -478,7 +478,7 @@ KX_LibLoadStatus *KX_BlenderConverter::LinkBlendFile(BlendHandle *bpy_openlib, c
 			if (options & LIB_LOAD_VERBOSE) {
 				CM_Debug("mesh name: " << mesh->name + 2);
 			}
-			RAS_MeshObject *meshobj = BL_ConvertMesh((Mesh *)mesh, nullptr, scene_merge, m_ketsjiEngine->GetRasterizer(), sceneConverter, false); // For now only use the libloading option for scenes, which need to handle materials/shaders
+			RAS_GameObject *meshobj = BL_ConvertMesh((Mesh *)mesh, nullptr, scene_merge, m_ketsjiEngine->GetRasterizer(), sceneConverter, false); // For now only use the libloading option for scenes, which need to handle materials/shaders
 			scene_merge->GetLogicManager()->RegisterMeshName(meshobj->GetName(), meshobj);
 		}
 		m_sceneSlots[scene_merge].Merge(sceneConverter);
@@ -600,7 +600,7 @@ bool KX_BlenderConverter::FreeBlendFile(Main *maggie)
 			// in case the mesh might be refered to later
 			std::map<std::string, void *> &mapStringToMeshes = scene->GetLogicManager()->GetMeshMap();
 			for (std::map<std::string, void *>::iterator it = mapStringToMeshes.begin(), end = mapStringToMeshes.end(); it != end;) {
-				RAS_MeshObject *meshobj = (RAS_MeshObject *)it->second;
+				RAS_GameObject *meshobj = (RAS_GameObject *)it->second;
 				if (meshobj && IS_TAGGED(meshobj->GetMesh())) {
 					it = mapStringToMeshes.erase(it);
 				}
@@ -648,7 +648,7 @@ bool KX_BlenderConverter::FreeBlendFile(Main *maggie)
 						// free the mesh, we could be referecing a linked one!
 						int mesh_index = gameobj->GetMeshCount();
 						while (mesh_index--) {
-							RAS_MeshObject *mesh = gameobj->GetMesh(mesh_index);
+							RAS_GameObject *mesh = gameobj->GetMesh(mesh_index);
 							if (IS_TAGGED(mesh->GetMesh())) {
 								gameobj->RemoveMeshes(); /* XXX - slack, should only remove meshes that are library items but mostly objects only have 1 mesh */
 								break;
@@ -708,8 +708,8 @@ bool KX_BlenderConverter::FreeBlendFile(Main *maggie)
 			}
 		}
 
-		for (UniquePtrList<RAS_MeshObject>::iterator it =  sceneSlot.m_meshobjects.begin(); it !=  sceneSlot.m_meshobjects.end(); ) {
-			RAS_MeshObject *mesh = (*it).get();
+		for (UniquePtrList<RAS_GameObject>::iterator it =  sceneSlot.m_meshobjects.begin(); it !=  sceneSlot.m_meshobjects.end(); ) {
+			RAS_GameObject *mesh = (*it).get();
 			if (IS_TAGGED(mesh->GetMesh())) {
 				it = sceneSlot.m_meshobjects.erase(it);
 			}
@@ -756,7 +756,7 @@ void KX_BlenderConverter::MergeScene(KX_Scene *to, KX_Scene *from)
 
 /** This function merges a mesh from the current scene into another main
  * it does not convert */
-RAS_MeshObject *KX_BlenderConverter::ConvertMeshSpecial(KX_Scene *kx_scene, Main *maggie, const std::string& name)
+RAS_GameObject *KX_BlenderConverter::ConvertMeshSpecial(KX_Scene *kx_scene, Main *maggie, const std::string& name)
 {
 	// Find a mesh in the current main */
 	ID *me = static_cast<ID *>(BLI_findstring(&m_maggie->mesh, name.c_str(), offsetof(ID, name) + 2));
@@ -831,7 +831,7 @@ RAS_MeshObject *KX_BlenderConverter::ConvertMeshSpecial(KX_Scene *kx_scene, Main
 
 	KX_BlenderSceneConverter sceneConverter;
 
-	RAS_MeshObject *meshobj = BL_ConvertMesh((Mesh *)me, nullptr, kx_scene, m_ketsjiEngine->GetRasterizer(), sceneConverter, false);
+	RAS_GameObject *meshobj = BL_ConvertMesh((Mesh *)me, nullptr, kx_scene, m_ketsjiEngine->GetRasterizer(), sceneConverter, false);
 	kx_scene->GetLogicManager()->RegisterMeshName(meshobj->GetName(), meshobj);
 
 	m_sceneSlots[kx_scene].Merge(sceneConverter);

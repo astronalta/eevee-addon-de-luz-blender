@@ -31,7 +31,7 @@
 #include "EXP_PyObjectPlus.h"
 #include <vector>
 
-class RAS_MeshObject;
+class RAS_GameObject;
 class MT_Transform;
 
 class KX_NavMeshObject: public KX_GameObject

@@ -36,7 +36,7 @@
 #include "KX_Scene.h"
 #include "RAS_IPolygonMaterial.h"
 #include "RAS_DisplayArray.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_BucketManager.h"
 #include "SCA_LogicManager.h"
 
@@ -95,7 +95,7 @@ PyAttributeDef KX_MeshProxy::Attributes[] = {
 	KX_PYATTRIBUTE_NULL    //Sentinel
 };
 
-KX_MeshProxy::KX_MeshProxy(RAS_MeshObject *mesh)
+KX_MeshProxy::KX_MeshProxy(RAS_GameObject *mesh)
 	:CValue(),
 	m_meshobj(mesh)
 {
@@ -412,7 +412,7 @@ static int kx_mesh_proxy_get_polygons_size_cb(void *self_v)
 static PyObject *kx_mesh_proxy_get_polygons_item_cb(void *self_v, int index)
 {
 	KX_MeshProxy *self = static_cast<KX_MeshProxy *>(self_v);
-	RAS_MeshObject *mesh = self->GetMesh();
+	RAS_GameObject *mesh = self->GetMesh();
 	RAS_Polygon *polygon = mesh->GetPolygon(index);
 	PyObject *polyob = (new KX_PolyProxy(self, mesh, polygon))->NewProxy(true);
 	return polyob;
@@ -430,7 +430,7 @@ PyObject *KX_MeshProxy::pyattr_get_polygons(PyObjectPlus *self_v, const KX_PYATT
 }
 
 /* a close copy of ConvertPythonToGameObject but for meshes */
-bool ConvertPythonToMesh(SCA_LogicManager *logicmgr, PyObject *value, RAS_MeshObject **object, bool py_none_ok, const char *error_prefix)
+bool ConvertPythonToMesh(SCA_LogicManager *logicmgr, PyObject *value, RAS_GameObject **object, bool py_none_ok, const char *error_prefix)
 {
 	if (value == nullptr) {
 		PyErr_Format(PyExc_TypeError, "%s, python pointer nullptr, should never happen", error_prefix);
@@ -451,7 +451,7 @@ bool ConvertPythonToMesh(SCA_LogicManager *logicmgr, PyObject *value, RAS_MeshOb
 	}
 
 	if (PyUnicode_Check(value)) {
-		*object = (RAS_MeshObject*)logicmgr->GetMeshByName(std::string(_PyUnicode_AsString(value)));
+		*object = (RAS_GameObject*)logicmgr->GetMeshByName(std::string(_PyUnicode_AsString(value)));
 		
 		if (*object) {
 			return true;

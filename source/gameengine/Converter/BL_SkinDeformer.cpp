@@ -41,7 +41,7 @@
 #include <string>
 #include "RAS_IPolygonMaterial.h"
 #include "RAS_DisplayArray.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_MeshUser.h"
 #include "RAS_BoundingBox.h"
 
@@ -86,7 +86,7 @@ static short get_deformflags(Object *bmeshobj)
 
 BL_SkinDeformer::BL_SkinDeformer(BL_DeformableGameObject *gameobj,
 								 Object *bmeshobj,
-								 RAS_MeshObject *mesh,
+								 RAS_GameObject *mesh,
 								 BL_ArmatureObject *arma)
 	:BL_MeshDeformer(gameobj, bmeshobj, mesh),
 	m_armobj(arma),
@@ -105,7 +105,7 @@ BL_SkinDeformer::BL_SkinDeformer(
 	BL_DeformableGameObject *gameobj,
 	Object *bmeshobj_old, // Blender object that owns the new mesh
 	Object *bmeshobj_new, // Blender object that owns the original mesh
-	RAS_MeshObject *mesh,
+	RAS_GameObject *mesh,
 	bool release_object,
 	bool recalc_normal,
 	BL_ArmatureObject *arma)

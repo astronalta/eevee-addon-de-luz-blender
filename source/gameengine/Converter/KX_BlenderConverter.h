@@ -37,7 +37,7 @@
 
 #ifdef _MSC_VER // MSVC doesn't support incomplete type in std::unique_ptr.
 #  include "KX_BlenderMaterial.h"
-#  include "RAS_MeshObject.h"
+#  include "RAS_GameObject.h"
 
 #  include "KX_BlenderScalarInterpolator.h"
 #endif
@@ -56,7 +56,7 @@ class KX_BlenderMaterial;
 class BL_InterpolatorList;
 class SCA_IActuator;
 class SCA_IController;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_Rasterizer;
 struct Main;
 struct BlendHandle;
@@ -79,7 +79,7 @@ private:
 	{
 	public:
 		UniquePtrList<KX_BlenderMaterial> m_materials;
-		UniquePtrList<RAS_MeshObject> m_meshobjects;
+		UniquePtrList<RAS_GameObject> m_meshobjects;
 		UniquePtrList<BL_InterpolatorList> m_interpolators;
 
 		std::map<bAction *, BL_InterpolatorList *> m_actionToInterp;
@@ -140,7 +140,7 @@ public:
 	bool FreeBlendFile(Main *maggie);
 	bool FreeBlendFile(const std::string& path);
 
-	RAS_MeshObject *ConvertMeshSpecial(KX_Scene *kx_scene, Main *maggie, const std::string& name);
+	RAS_GameObject *ConvertMeshSpecial(KX_Scene *kx_scene, Main *maggie, const std::string& name);
 
 	void MergeScene(KX_Scene *to, KX_Scene *from);
 

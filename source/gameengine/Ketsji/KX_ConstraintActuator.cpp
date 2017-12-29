@@ -41,7 +41,7 @@
 #include "KX_GameObject.h"
 #include "KX_RayCast.h"
 #include "KX_Globals.h" // KX_GetActiveScene
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 
 #include "CM_Message.h"
 
@@ -132,7 +132,7 @@ bool KX_ConstraintActuator::RayHit(KX_ClientObjectInfo *client, KX_RayCast *resu
 	{
 		if (m_option & KX_ACT_CONSTRAINT_MATERIAL) {
 			for (unsigned int i = 0; i < m_hitObject->GetMeshCount(); ++i) {
-				RAS_MeshObject *meshObj = m_hitObject->GetMesh(i);
+				RAS_GameObject *meshObj = m_hitObject->GetMesh(i);
 				for (unsigned int j = 0; j < meshObj->NumMaterials(); ++j) {
 					bFound = (m_property == std::string(meshObj->GetMaterialName(j), 2));
 					if (bFound)

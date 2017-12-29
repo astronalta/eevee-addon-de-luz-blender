@@ -42,20 +42,20 @@
 
 struct Object;
 struct Key;
-class RAS_MeshObject;
+class RAS_GameObject;
 
 class BL_ShapeDeformer : public BL_SkinDeformer
 {
 public:
 	BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
 	                 Object *bmeshobj,
-	                 RAS_MeshObject *mesh);
+	                 RAS_GameObject *mesh);
 
 	/* this second constructor is needed for making a mesh deformable on the fly. */
 	BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
 					 Object *bmeshobj_old,
 					 Object *bmeshobj_new,
-					 RAS_MeshObject *mesh,
+					 RAS_GameObject *mesh,
 					 bool release_object,
 					 bool recalc_normal,
 					 BL_ArmatureObject *arma = nullptr);

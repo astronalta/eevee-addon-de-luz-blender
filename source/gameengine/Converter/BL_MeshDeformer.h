@@ -46,7 +46,7 @@
 struct Object;
 struct Mesh;
 class BL_DeformableGameObject;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_IPolyMaterial;
 
 class BL_MeshDeformer : public RAS_Deformer
@@ -56,7 +56,7 @@ public:
 	void RecalcNormals();
 	virtual void Relink(std::map<SCA_IObject *, SCA_IObject *>& map);
 
-	BL_MeshDeformer(BL_DeformableGameObject *gameobj, Object *obj, RAS_MeshObject *meshobj);
+	BL_MeshDeformer(BL_DeformableGameObject *gameobj, Object *obj, RAS_GameObject *meshobj);
 	virtual ~BL_MeshDeformer();
 	virtual void SetSimulatedTime(double time)
 	{
@@ -79,7 +79,7 @@ public:
 	{
 		return m_bmesh;
 	}
-	virtual RAS_MeshObject *GetRasMesh()
+	virtual RAS_GameObject *GetRasMesh()
 	{
 		return m_mesh;
 	}

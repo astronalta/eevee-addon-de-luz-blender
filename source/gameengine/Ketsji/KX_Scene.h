@@ -77,7 +77,7 @@ class KX_Camera;
 class KX_FontObject;
 class KX_GameObject;
 class KX_LightObject;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_BoundingBoxManager;
 class RAS_BucketManager;
 class RAS_MaterialBucket;
@@ -393,7 +393,7 @@ public:
 	void DelayedRemoveObject(KX_GameObject *gameobj);
 
 	bool NewRemoveObject(KX_GameObject *gameobj);
-	void ReplaceMesh(KX_GameObject *gameobj, RAS_MeshObject *mesh, bool use_gfx, bool use_phys);
+	void ReplaceMesh(KX_GameObject *gameobj, RAS_GameObject *mesh, bool use_gfx, bool use_phys);
 
 	void AddAnimatedObject(KX_GameObject *gameobj);
 

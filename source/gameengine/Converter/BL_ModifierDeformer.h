@@ -40,7 +40,7 @@
 #include "BL_DeformableGameObject.h"
 #include <vector>
 
-class RAS_MeshObject;
+class RAS_GameObject;
 struct DerivedMesh;
 struct Object;
 
@@ -53,7 +53,7 @@ public:
 	BL_ModifierDeformer(BL_DeformableGameObject *gameobj,
 						Scene *scene,
 						Object *bmeshobj,
-						RAS_MeshObject *mesh)
+						RAS_GameObject *mesh)
 		:BL_ShapeDeformer(gameobj, bmeshobj, mesh),
 		m_lastModifierUpdate(-1.0),
 		m_scene(scene),
@@ -67,7 +67,7 @@ public:
 						Scene *scene,
 						Object *bmeshobj_old,
 						Object *bmeshobj_new,
-						RAS_MeshObject *mesh,
+						RAS_GameObject *mesh,
 						bool release_object,
 						BL_ArmatureObject *arma = nullptr)
 		:BL_ShapeDeformer(gameobj, bmeshobj_old, bmeshobj_new, mesh, release_object, false, arma),

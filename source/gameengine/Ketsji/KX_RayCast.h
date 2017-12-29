@@ -40,7 +40,7 @@
 #include "MT_Vector3.h"
 #include "MT_Vector3.h"
 
-class RAS_MeshObject; 
+class RAS_GameObject; 
 struct KX_ClientObjectInfo;
 
 /**
@@ -64,7 +64,7 @@ public:
 	bool					m_hitFound;
 	MT_Vector3				m_hitPoint;
 	MT_Vector3				m_hitNormal;
-	RAS_MeshObject *m_hitMesh;
+	RAS_GameObject *m_hitMesh;
 	int						m_hitPolygon;
 	int                     m_hitUVOK;		// !=0 if UV coordinate in m_hitUV is valid
 	MT_Vector2				m_hitUV;

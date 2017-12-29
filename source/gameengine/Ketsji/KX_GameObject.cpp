@@ -40,7 +40,7 @@
 #include "KX_Camera.h" // only for their ::Type
 #include "KX_Light.h"  // only for their ::Type
 #include "KX_FontObject.h"  // only for their ::Type
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_MeshUser.h"
 #include "RAS_BoundingBoxManager.h"
 #include "RAS_Deformer.h"
@@ -896,7 +896,7 @@ void KX_GameObject::SetLodManager(KX_LodManager *lodManager)
 	// Restore object original mesh.
 	if (!lodManager && m_lodManager && m_lodManager->GetLevelCount() > 0) {
 		KX_Scene *scene = GetScene();
-		RAS_MeshObject *origmesh = m_lodManager->GetLevel(0)->GetMesh();
+		RAS_GameObject *origmesh = m_lodManager->GetLevel(0)->GetMesh();
 		scene->ReplaceMesh(this, origmesh, true, false);
 	}
 
@@ -927,7 +927,7 @@ void KX_GameObject::UpdateLod(const MT_Vector3& cam_pos, float lodfactor)
 	KX_LodLevel *lodLevel = m_lodManager->GetLevel(scene, m_currentLodLevel, distance2);
 
 	if (lodLevel) {
-		RAS_MeshObject *mesh = lodLevel->GetMesh();
+		RAS_GameObject *mesh = lodLevel->GetMesh();
 		if (mesh != m_meshes[0]) {
 			scene->ReplaceMesh(this, mesh, true, false);
 		}
@@ -2040,7 +2040,7 @@ PyObject *KX_GameObject::PyReplaceMesh(PyObject *args)
 
 	PyObject *value;
 	int use_gfx= 1, use_phys= 0;
-	RAS_MeshObject *new_mesh;
+	RAS_GameObject *new_mesh;
 	
 	if (!PyArg_ParseTuple(args,"O|ii:replaceMesh", &value, &use_gfx, &use_phys))
 		return nullptr;
@@ -2062,7 +2062,7 @@ PyObject *KX_GameObject::PyEndObject()
 PyObject *KX_GameObject::PyReinstancePhysicsMesh(PyObject *args)
 {
 	KX_GameObject *gameobj= nullptr;
-	RAS_MeshObject *mesh= nullptr;
+	RAS_GameObject *mesh= nullptr;
 	SCA_LogicManager *logicmgr = GetScene()->GetLogicManager();
 	int dupli = 0;
 

@@ -63,7 +63,7 @@
 #include "PHY_Pro.h"
 #include "PHY_IPhysicsEnvironment.h"
 
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_Rasterizer.h"
 #include "RAS_OpenGLLight.h"
 #include "RAS_ILightObject.h"
@@ -371,11 +371,11 @@ static unsigned int KX_Mcol2uint_new(MCol col)
 
 static void GetRGB(
         MFace* mface,
-		const RAS_MeshObject::LayerList& layers,
+		const RAS_GameObject::LayerList& layers,
         unsigned int c[4][RAS_ITexVert::MAX_UNIT])
 {
-	for (RAS_MeshObject::LayerList::const_iterator it = layers.begin(), end = layers.end(); it != end; ++it) {
-		const RAS_MeshObject::Layer& layer = *it;
+	for (RAS_GameObject::LayerList::const_iterator it = layers.begin(), end = layers.end(); it != end; ++it) {
+		const RAS_GameObject::Layer& layer = *it;
 		if (!layer.color) {
 			continue;
 		}
@@ -389,7 +389,7 @@ static void GetRGB(
 	}
 }
 
-static void GetUVs(const RAS_MeshObject::LayerList& layers, MFace *mface, MTFace *tface, MT_Vector2 uvs[4][RAS_Texture::MaxUnits])
+static void GetUVs(const RAS_GameObject::LayerList& layers, MFace *mface, MTFace *tface, MT_Vector2 uvs[4][RAS_Texture::MaxUnits])
 {
 	if (tface) {
 		uvs[0][0].setValue(tface->uv[0]);
@@ -403,8 +403,8 @@ static void GetUVs(const RAS_MeshObject::LayerList& layers, MFace *mface, MTFace
 		uvs[0][0] = uvs[1][0] = uvs[2][0] = uvs[3][0] = MT_Vector2(0.0f, 0.0f);
 	}
 
-	for (RAS_MeshObject::LayerList::const_iterator it = layers.begin(), end = layers.end(); it != end; ++it) {
-		const RAS_MeshObject::Layer& layer = *it;
+	for (RAS_GameObject::LayerList::const_iterator it = layers.begin(), end = layers.end(); it != end; ++it) {
+		const RAS_GameObject::Layer& layer = *it;
 		if (!layer.face) {
 			continue;
 		}
@@ -440,7 +440,7 @@ static KX_BlenderMaterial *ConvertMaterial(
 }
 
 /// Convert uv and color layers for a given vertex and material.
-static void uvsRgbFromMesh(Material *ma, MFace *mface, MTFace *tface, const RAS_MeshObject::LayerList& layers,
+static void uvsRgbFromMesh(Material *ma, MFace *mface, MTFace *tface, const RAS_GameObject::LayerList& layers,
 	unsigned int rgb[4][RAS_ITexVert::MAX_UNIT], MT_Vector2 uvs[4][RAS_ITexVert::MAX_UNIT])
 {
 	if (mface) {
@@ -469,9 +469,9 @@ static RAS_MaterialBucket *material_from_mesh(Material *ma, int lightlayer, KX_S
 }
 
 /* blenderobj can be nullptr, make sure its checked for */
-RAS_MeshObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, RAS_Rasterizer *rasty, KX_BlenderSceneConverter& converter, bool libloading)
+RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, RAS_Rasterizer *rasty, KX_BlenderSceneConverter& converter, bool libloading)
 {
-	RAS_MeshObject *meshobj;
+	RAS_GameObject *meshobj;
 	int lightlayer = blenderobj ? blenderobj->lay:(1<<20)-1; // all layers if no object.
 
 	// Without checking names, we get some reuse we don't want that can cause
@@ -514,7 +514,7 @@ RAS_MeshObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 	}
 
 	// Extract avaiable layers
-	RAS_MeshObject::LayersInfo layersInfo;
+	RAS_GameObject::LayersInfo layersInfo;
 
 	// Get the active color and uv layer.
 	const short activeUv = CustomData_get_active_layer(&dm->faceData, CD_MTFACE);
@@ -539,7 +539,7 @@ RAS_MeshObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 				break;
 			}
 
-			RAS_MeshObject::Layer layer = {nullptr, nullptr, 0, dm->faceData.layers[i].name};
+			RAS_GameObject::Layer layer = {nullptr, nullptr, 0, dm->faceData.layers[i].name};
 
 			if (dm->faceData.layers[i].type == CD_MCOL) {
 				layer.color = (MCol *)(dm->faceData.layers[i].data);
@@ -556,7 +556,7 @@ RAS_MeshObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 		}
 	}
 
-	meshobj = new RAS_MeshObject(mesh, layersInfo);
+	meshobj = new RAS_GameObject(mesh, layersInfo);
 
 	meshobj->m_sharedvertex_map.resize(totvert);
 
@@ -705,8 +705,8 @@ RAS_MeshObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 		if (tface) 
 			tface++;
 
-		for (RAS_MeshObject::LayerList::iterator it = layersInfo.layers.begin(), end = layersInfo.layers.end(); it != end; ++it) {
-			RAS_MeshObject::Layer &layer = *it;
+		for (RAS_GameObject::LayerList::iterator it = layersInfo.layers.begin(), end = layersInfo.layers.end(); it != end; ++it) {
+			RAS_GameObject::Layer &layer = *it;
 
 			if (layer.face) {
 				++layer.face;
@@ -819,7 +819,7 @@ static void BL_CreateGraphicObjectNew(KX_GameObject* gameobj,
 
 static void BL_CreatePhysicsObjectNew(KX_GameObject* gameobj,
                                       struct Object* blenderobject,
-                                      RAS_MeshObject* meshobj,
+                                      RAS_GameObject* meshobj,
                                       KX_Scene* kxscene,
                                       int activeLayerBitInfo,
                                       KX_BlenderSceneConverter& converter,
@@ -1014,7 +1014,7 @@ static KX_GameObject *gameobject_from_blenderobject(
 	case OB_MESH:
 	{
 		Mesh* mesh = static_cast<Mesh*>(ob->data);
-		RAS_MeshObject* meshobj = BL_ConvertMesh(mesh, ob, kxscene, rasty, converter, libloading);
+		RAS_GameObject* meshobj = BL_ConvertMesh(mesh, ob, kxscene, rasty, converter, libloading);
 		
 		// needed for python scripting
 		kxscene->GetLogicManager()->RegisterMeshName(meshobj->GetName(),meshobj);
@@ -1727,7 +1727,7 @@ void BL_ConvertBlenderObjects(struct Main* maggie,
 	for (KX_GameObject *gameobj : sumolist) {
 		struct Object* blenderobject = gameobj->GetBlenderObject();
 		int nummeshes = gameobj->GetMeshCount();
-		RAS_MeshObject* meshobj = 0;
+		RAS_GameObject* meshobj = 0;
 		if (nummeshes > 0)
 		{
 			meshobj = gameobj->GetMesh(0);
@@ -1741,7 +1741,7 @@ void BL_ConvertBlenderObjects(struct Main* maggie,
 	for (KX_GameObject *gameobj : sumolist) {
 		struct Object* blenderobject = gameobj->GetBlenderObject();
 		int nummeshes = gameobj->GetMeshCount();
-		RAS_MeshObject* meshobj = 0;
+		RAS_GameObject* meshobj = 0;
 		if (nummeshes > 0)
 		{
 			meshobj = gameobj->GetMesh(0);

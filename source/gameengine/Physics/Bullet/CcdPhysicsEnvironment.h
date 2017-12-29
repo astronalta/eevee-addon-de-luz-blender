@@ -256,7 +256,7 @@ public:
 
 	virtual void ConvertObject(KX_BlenderSceneConverter& converter,
 							   KX_GameObject *gameobj,
-	                           RAS_MeshObject *meshobj,
+	                           RAS_GameObject *meshobj,
 	                           DerivedMesh *dm,
 	                           KX_Scene *kxscene,
 	                           PHY_ShapeProps *shapeprops,

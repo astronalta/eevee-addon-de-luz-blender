@@ -32,7 +32,7 @@
 #include "RAS_DisplayArrayBucket.h"
 #include "RAS_MaterialBucket.h"
 #include "RAS_MaterialShader.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_Deformer.h"
 #include "RAS_Rasterizer.h"
 #include "RAS_BucketManager.h"
@@ -48,7 +48,7 @@
 #endif // WIN32
 
 RAS_DisplayArrayBucket::RAS_DisplayArrayBucket(RAS_MaterialBucket *bucket, RAS_IDisplayArray *array,
-											   RAS_MeshObject *mesh, RAS_MeshMaterial *meshmat, RAS_Deformer *deformer)
+											   RAS_GameObject *mesh, RAS_MeshMaterial *meshmat, RAS_Deformer *deformer)
 	:m_bucket(bucket),
 	m_displayArray(array),
 	m_mesh(mesh),
@@ -73,7 +73,7 @@ RAS_IDisplayArray *RAS_DisplayArrayBucket::GetDisplayArray() const
 	return m_displayArray;
 }
 
-RAS_MeshObject *RAS_DisplayArrayBucket::GetMesh() const
+RAS_GameObject *RAS_DisplayArrayBucket::GetMesh() const
 {
 	return m_mesh;
 }

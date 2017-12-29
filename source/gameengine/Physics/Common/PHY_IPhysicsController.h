@@ -43,7 +43,7 @@ class MT_Vector3;
 class MT_Matrix3x3;
 
 class KX_GameObject;
-class RAS_MeshObject;
+class RAS_GameObject;
 
 /**
  * PHY_IPhysicsController is the abstract simplified Interface to a physical object.
@@ -148,7 +148,7 @@ public:
 	virtual bool IsDynamicsSuspended() const = 0;
 	virtual bool IsPhysicsSuspended() = 0;
 
-	virtual bool ReinstancePhysicsShape(KX_GameObject *from_gameobj, RAS_MeshObject *from_meshobj, bool dupli = false) = 0;
+	virtual bool ReinstancePhysicsShape(KX_GameObject *from_gameobj, RAS_GameObject *from_meshobj, bool dupli = false) = 0;
 	virtual void ReplacePhysicsShape(PHY_IPhysicsController *phyctrl) = 0;
 
 	/* Method to replicate rigid body joint contraints for group instances. */

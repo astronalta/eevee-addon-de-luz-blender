@@ -57,6 +57,8 @@ struct PHY_MaterialProps;
 class PHY_IMotionState;
 struct bRigidBodyJointConstraint;
 
+class RAS_GameObject;
+
 /**
  * pass back information from rayTest
  */
@@ -64,7 +66,7 @@ struct PHY_RayCastResult {
 	PHY_IPhysicsController *m_controller;
 	MT_Vector3 m_hitPoint;
 	MT_Vector3 m_hitNormal;
-	RAS_MeshObject *m_meshObject; // !=nullptr for mesh object (only for Bullet controllers)
+	RAS_GameObject *m_meshObject; // !=nullptr for mesh object (only for Bullet controllers)
 	int m_polygon; // index of the polygon hit by the ray, only if m_meshObject != nullptr
 	int m_hitUVOK; // !=0 if UV coordinate in m_hitUV is valid
 	MT_Vector2 m_hitUV; // UV coordinates of hit point
@@ -233,7 +235,7 @@ public:
 
 	virtual void ConvertObject(KX_BlenderSceneConverter& converter,
 							   KX_GameObject *gameobj,
-	                           RAS_MeshObject *meshobj,
+	                           RAS_GameObject *meshobj,
 	                           DerivedMesh *dm,
 	                           KX_Scene *kxscene,
 	                           PHY_ShapeProps *shapeprops,

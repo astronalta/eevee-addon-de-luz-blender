@@ -46,7 +46,7 @@ extern bool gDisableDeactivation;
 class CcdPhysicsEnvironment;
 class CcdPhysicsController;
 class btMotionState;
-class RAS_MeshObject;
+class RAS_GameObject;
 struct DerivedMesh;
 class btCollisionShape;
 
@@ -71,7 +71,7 @@ public:
 		float uv[2];
 	};
 
-	static CcdShapeConstructionInfo *FindMesh(class RAS_MeshObject *mesh, struct DerivedMesh *dm, bool polytope);
+	static CcdShapeConstructionInfo *FindMesh(class RAS_GameObject *mesh, struct DerivedMesh *dm, bool polytope);
 
 	CcdShapeConstructionInfo() 
 		:m_shapeType(PHY_SHAPE_NONE),
@@ -138,13 +138,13 @@ public:
 		return true;
 	}
 
-	bool SetMesh(class RAS_MeshObject *mesh, struct DerivedMesh *dm, bool polytope);
-	RAS_MeshObject *GetMesh(void)
+	bool SetMesh(class RAS_GameObject *mesh, struct DerivedMesh *dm, bool polytope);
+	RAS_GameObject *GetMesh(void)
 	{
 		return m_meshObject;
 	}
 
-	bool UpdateMesh(class KX_GameObject *gameobj, class RAS_MeshObject *mesh);
+	bool UpdateMesh(class KX_GameObject *gameobj, class RAS_GameObject *mesh);
 
 	CcdShapeConstructionInfo *GetReplica();
 
@@ -186,9 +186,9 @@ public:
 		m_weldingThreshold1  = threshold * threshold;
 	}
 protected:
-	static std::map<RAS_MeshObject *, CcdShapeConstructionInfo *> m_meshShapeMap;
+	static std::map<RAS_GameObject *, CcdShapeConstructionInfo *> m_meshShapeMap;
 	/// Keep a pointer to the original mesh
-	RAS_MeshObject *m_meshObject;
+	RAS_GameObject *m_meshObject;
 	/// The list of vertexes and indexes for the triangle mesh, shared between Bullet shape.
 	btTriangleIndexVertexArray *m_triangleIndexVertexArray;
 	/// for compound shapes
@@ -846,7 +846,7 @@ public:
 		return GetConstructionInfo().m_shapeInfo->m_shapeType == PHY_SHAPE_COMPOUND;
 	}
 
-	virtual bool ReinstancePhysicsShape(KX_GameObject *from_gameobj, RAS_MeshObject *from_meshobj, bool dupli = false);
+	virtual bool ReinstancePhysicsShape(KX_GameObject *from_gameobj, RAS_GameObject *from_meshobj, bool dupli = false);
 	virtual void ReplacePhysicsShape(PHY_IPhysicsController *phyctrl);
 
 	/* Method to replicate rigid body joint contraints for group instances. */

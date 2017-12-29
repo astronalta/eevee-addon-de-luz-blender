@@ -34,7 +34,7 @@
 
 #include "KX_PolyProxy.h"
 #include "KX_MeshProxy.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_IDisplayArray.h"
 #include "KX_VertexProxy.h"
 #include "RAS_Polygon.h"
@@ -103,7 +103,7 @@ PyAttributeDef KX_PolyProxy::Attributes[] = {
 	KX_PYATTRIBUTE_NULL	//Sentinel
 };
 
-KX_PolyProxy::KX_PolyProxy(KX_MeshProxy *meshProxy, RAS_MeshObject *mesh, RAS_Polygon* polygon)
+KX_PolyProxy::KX_PolyProxy(KX_MeshProxy *meshProxy, RAS_GameObject *mesh, RAS_Polygon* polygon)
 	:m_meshProxy(meshProxy),
 	m_polygon(polygon),
 	m_mesh(mesh)

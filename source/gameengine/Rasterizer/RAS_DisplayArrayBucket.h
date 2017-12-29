@@ -43,7 +43,7 @@
 class RAS_MaterialBucket;
 class RAS_IDisplayArray;
 class RAS_MaterialShader;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_MeshMaterial;
 class RAS_Deformer;
 
@@ -68,7 +68,7 @@ private:
 	/// The display array = list of vertexes and indexes.
 	RAS_IDisplayArray *m_displayArray;
 	/// The parent mesh object, it can be nullptr for text objects.
-	RAS_MeshObject *m_mesh;
+	RAS_GameObject *m_mesh;
 	/// The material mesh.
 	RAS_MeshMaterial *m_meshMaterial;
 	/// The deformer using this display array.
@@ -76,13 +76,13 @@ private:
 
 public:
 	RAS_DisplayArrayBucket(RAS_MaterialBucket *bucket, RAS_IDisplayArray *array,
-						   RAS_MeshObject *mesh, RAS_MeshMaterial *meshmat, RAS_Deformer *deformer);
+						   RAS_GameObject *mesh, RAS_MeshMaterial *meshmat, RAS_Deformer *deformer);
 	~RAS_DisplayArrayBucket();
 
 	/// \section Accesor
 	RAS_MaterialBucket *GetBucket() const;
 	RAS_IDisplayArray *GetDisplayArray() const;
-	RAS_MeshObject *GetMesh() const;
+	RAS_GameObject *GetMesh() const;
 	RAS_MeshMaterial *GetMeshMaterial() const;
 
 	/// \section Render Infos

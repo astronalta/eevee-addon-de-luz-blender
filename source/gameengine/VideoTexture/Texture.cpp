@@ -35,7 +35,7 @@
 
 #include "KX_GameObject.h"
 #include "KX_Light.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_ILightObject.h"
 #include "DNA_mesh_types.h"
 #include "DNA_meshdata_types.h"
@@ -204,7 +204,7 @@ RAS_IPolyMaterial *getMaterial(KX_GameObject *gameObj, short matID)
 	if (gameObj->GetMeshCount() > 0)
 	{
 		// get material from mesh
-		RAS_MeshObject * mesh = gameObj->GetMesh(0);
+		RAS_GameObject * mesh = gameObj->GetMesh(0);
 		RAS_MeshMaterial *meshMat = mesh->GetMeshMaterial(matID);
 		if (meshMat != nullptr && meshMat->GetBucket() != nullptr)
 			// return pointer to polygon or blender material

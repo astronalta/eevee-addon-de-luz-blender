@@ -56,7 +56,7 @@
 #include "KX_Camera.h"
 #include "SCA_JoystickManager.h"
 #include "KX_PyMath.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "SCA_IScene.h"
 #include "KX_LodManager.h"
 #include "KX_CullingHandler.h"
@@ -1729,7 +1729,7 @@ bool KX_Scene::NewRemoveObject(KX_GameObject *gameobj)
 
 
 
-void KX_Scene::ReplaceMesh(KX_GameObject *gameobj, RAS_MeshObject *mesh, bool use_gfx, bool use_phys)
+void KX_Scene::ReplaceMesh(KX_GameObject *gameobj, RAS_GameObject *mesh, bool use_gfx, bool use_phys)
 {
 	if (!gameobj) {
 		CM_FunctionWarning("invalid object, doing nothing");
@@ -2464,7 +2464,7 @@ static void MergeScene_GameObject(KX_GameObject* gameobj, KX_Scene *to, KX_Scene
 	to->GetLogicManager()->RegisterGameObj(gameobj->GetBlenderObject(), gameobj);
 
 	for (int i = 0; i < gameobj->GetMeshCount(); ++i) {
-		RAS_MeshObject *meshobj = gameobj->GetMesh(i);
+		RAS_GameObject *meshobj = gameobj->GetMesh(i);
 		// Register the mesh object by name and blender object.
 		to->GetLogicManager()->RegisterGameMeshName(meshobj->GetName(), gameobj->GetBlenderObject());
 		to->GetLogicManager()->RegisterMeshName(meshobj->GetName(), meshobj);

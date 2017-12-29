@@ -29,7 +29,7 @@
 
 #include "BLI_math_vector.h"
 #include "KX_NavMeshObject.h"
-#include "RAS_MeshObject.h"
+#include "RAS_GameObject.h"
 #include "RAS_Polygon.h"
 #include "RAS_ITexVert.h"
 
@@ -230,8 +230,8 @@ bool KX_NavMeshObject::BuildVertIndArrays(float *&vertices, int& nverts,
 	}
 	else
 	{
-		//create from RAS_MeshObject (detailed mesh is fake)
-		RAS_MeshObject* meshobj = GetMesh(0);
+		//create from RAS_GameObject (detailed mesh is fake)
+		RAS_GameObject* meshobj = GetMesh(0);
 		vertsPerPoly = 3;
 		nverts = meshobj->m_sharedvertex_map.size();
 		if (nverts >= 0xffff)

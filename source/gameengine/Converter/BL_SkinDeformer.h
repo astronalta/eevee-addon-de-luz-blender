@@ -48,7 +48,7 @@
 
 struct Object;
 struct bPoseChannel;
-class RAS_MeshObject;
+class RAS_GameObject;
 class RAS_IPolyMaterial;
 
 class BL_SkinDeformer : public BL_MeshDeformer
@@ -59,14 +59,14 @@ public:
 
 	BL_SkinDeformer(BL_DeformableGameObject *gameobj,
 					Object *bmeshobj,
-					RAS_MeshObject *mesh,
+					RAS_GameObject *mesh,
 					BL_ArmatureObject *arma = nullptr);
 
 	/* this second constructor is needed for making a mesh deformable on the fly. */
 	BL_SkinDeformer(BL_DeformableGameObject *gameobj,
 					Object *bmeshobj_old,
 					Object *bmeshobj_new,
-					RAS_MeshObject *mesh,
+					RAS_GameObject *mesh,
 					bool release_object,
 					bool recalc_normal,
 					BL_ArmatureObject *arma = nullptr);
