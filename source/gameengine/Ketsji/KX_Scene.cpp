@@ -1739,7 +1739,7 @@ void KX_Scene::ReplaceMesh(KX_GameObject *gameobj, RAS_GameObject *mesh, bool us
 	if (use_gfx && mesh != nullptr)
 	{
 	gameobj->RemoveMeshes();
-	gameobj->AddMesh(mesh);
+	gameobj->AddRasObj(mesh);
 
 	if (gameobj->IsDeformable())
 	{

@@ -1014,22 +1014,22 @@ static KX_GameObject *gameobject_from_blenderobject(
 	case OB_MESH:
 	{
 		Mesh* mesh = static_cast<Mesh*>(ob->data);
-		RAS_GameObject* meshobj = BL_ConvertRasGameObj(mesh, ob, kxscene, rasty, converter, libloading);
+		RAS_GameObject* rasobj = BL_ConvertRasGameObj(mesh, ob, kxscene, rasty, converter, libloading);
 		
 		// needed for python scripting
-		kxscene->GetLogicManager()->RegisterMeshName(meshobj->GetName(),meshobj);
+		kxscene->GetLogicManager()->RegisterMeshName(rasobj->GetName(), rasobj);
 
 		if (ob->gameflag & OB_NAVMESH)
 		{
 			gameobj = new KX_NavMeshObject(kxscene,KX_Scene::m_callbacks);
-			gameobj->AddMesh(meshobj);
+			gameobj->AddRasObj(rasobj);
 			break;
 		}
 
 		gameobj = new BL_DeformableGameObject(ob,kxscene,KX_Scene::m_callbacks);
 	
 		// set transformation
-		gameobj->AddMesh(meshobj);
+		gameobj->AddRasObj(rasobj);
 
 		// gather levels of detail
 		KX_LodManager *lodManager = lodmanager_from_blenderobject(ob, kxscene, rasty, converter, libloading);
@@ -1059,24 +1059,24 @@ static KX_GameObject *gameobject_from_blenderobject(
 		BL_DeformableGameObject *deformableGameObj = (BL_DeformableGameObject *)gameobj;
 
 		if (bHasModifier) {
-			deformer = new BL_ModifierDeformer(deformableGameObj, kxscene->GetBlenderScene(), ob, meshobj);
+			deformer = new BL_ModifierDeformer(deformableGameObj, kxscene->GetBlenderScene(), ob, rasobj);
 		}
 		else if (bHasShapeKey) {
 			// not that we can have shape keys without dvert! 
-			deformer = new BL_ShapeDeformer(deformableGameObj, ob, meshobj);
+			deformer = new BL_ShapeDeformer(deformableGameObj, ob, rasobj);
 		}
 		else if (bHasArmature) {
-			deformer = new BL_SkinDeformer(deformableGameObj, ob, meshobj);
+			deformer = new BL_SkinDeformer(deformableGameObj, ob, rasobj);
 		}
 		else if (bHasDvert) {
 			// this case correspond to a mesh that can potentially deform but not with the
 			// object to which it is attached for the moment. A skin mesh was created in
 			// BL_ConvertRasGameObj() so must create a deformer too!
-			deformer = new BL_MeshDeformer(deformableGameObj, ob, meshobj);
+			deformer = new BL_MeshDeformer(deformableGameObj, ob, rasobj);
 		}
 #ifdef WITH_BULLET
 		else if (bHasSoftBody) {
-			deformer = new KX_SoftBodyDeformer(meshobj, deformableGameObj);
+			deformer = new KX_SoftBodyDeformer(rasobj, deformableGameObj);
 		}
 #endif
 

@@ -755,7 +755,7 @@ public:
 	 * mesh though,
 	 */
 		void
-	AddMesh(
+	AddRasObj(
 		RAS_GameObject* mesh
 	) {
 		m_meshes.push_back(mesh);
