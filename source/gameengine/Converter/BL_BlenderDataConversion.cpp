@@ -469,18 +469,18 @@ static RAS_MaterialBucket *material_from_mesh(Material *ma, int lightlayer, KX_S
 }
 
 /* blenderobj can be nullptr, make sure its checked for */
-RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, RAS_Rasterizer *rasty, KX_BlenderSceneConverter& converter, bool libloading)
+RAS_GameObject* BL_ConvertRasGameObj(Mesh* mesh, Object* blenderobj, KX_Scene* scene, RAS_Rasterizer *rasty, KX_BlenderSceneConverter& converter, bool libloading)
 {
-	RAS_GameObject *meshobj;
+	RAS_GameObject *rasobj;
 	int lightlayer = blenderobj ? blenderobj->lay:(1<<20)-1; // all layers if no object.
 
 	// Without checking names, we get some reuse we don't want that can cause
 	// problems with material LoDs.
-	if (blenderobj && ((meshobj = converter.FindGameMesh(mesh/*, ob->lay*/)) != nullptr)) {
-		const std::string bge_name = meshobj->GetName();
+	if (blenderobj && ((rasobj = converter.FindRasObj(mesh/*, ob->lay*/)) != nullptr)) {
+		const std::string bge_name = rasobj->GetName();
 		const std::string blender_name = ((ID *)blenderobj->data)->name + 2;
 		if (bge_name == blender_name) {
-			return meshobj;
+			return rasobj;
 		}
 	}
 
@@ -556,9 +556,9 @@ RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 		}
 	}
 
-	meshobj = new RAS_GameObject(mesh, layersInfo);
+	rasobj = new RAS_GameObject(mesh, layersInfo);
 
-	meshobj->m_sharedvertex_map.resize(totvert);
+	rasobj->m_sharedvertex_map.resize(totvert);
 
 	RAS_TexVertFormat vertformat;
 	vertformat.uvSize = max_ii(1, uvLayers);
@@ -597,7 +597,7 @@ RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 		}
 
 		RAS_MaterialBucket *bucket = material_from_mesh(ma, lightlayer, scene, rasty, converter);
-		meshobj->AddMaterial(bucket, i, vertformat);
+		rasobj->AddMaterial(bucket, i, vertformat);
 	}
 
 	for (int f=0;f<totface;f++,mface++)
@@ -655,7 +655,7 @@ RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 		{
 
 			uvsRgbFromMesh(ma, mface, tface, layersInfo.layers, rgb, uvs);
-			RAS_MeshMaterial *meshmat = meshobj->GetMeshMaterialBlenderIndex(mface->mat_nr);
+			RAS_MeshMaterial *meshmat = rasobj->GetMeshMaterialBlenderIndex(mface->mat_nr);
 
 			// set render flags
 			bool visible = ((ma->game.flag & GEMAT_INVISIBLE)==0);
@@ -669,12 +669,12 @@ RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 
 			unsigned int indices[4]; // all indices of the poly, can be a tri or quad.
 
-			indices[0] = meshobj->AddVertex(meshmat, pt[0], uvs[0], tan[0], rgb[0], no[0], flat, mface->v1);
-			indices[1] = meshobj->AddVertex(meshmat, pt[1], uvs[1], tan[1], rgb[1], no[1], flat, mface->v2);
-			indices[2] = meshobj->AddVertex(meshmat, pt[2], uvs[2], tan[2], rgb[2], no[2], flat, mface->v3);
+			indices[0] = rasobj->AddVertex(meshmat, pt[0], uvs[0], tan[0], rgb[0], no[0], flat, mface->v1);
+			indices[1] = rasobj->AddVertex(meshmat, pt[1], uvs[1], tan[1], rgb[1], no[1], flat, mface->v2);
+			indices[2] = rasobj->AddVertex(meshmat, pt[2], uvs[2], tan[2], rgb[2], no[2], flat, mface->v3);
 
 			if (nverts == 4) {
-				indices[3] = meshobj->AddVertex(meshmat, pt[3], uvs[3], tan[3], rgb[3], no[3], flat, mface->v4);
+				indices[3] = rasobj->AddVertex(meshmat, pt[3], uvs[3], tan[3], rgb[3], no[3], flat, mface->v4);
 			}
 
 			if (meshmat->GetBucket()->IsWire() && visible) {
@@ -693,13 +693,13 @@ RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 						// If 2 vertices are the same as an edge, we add a line in the mesh.
 						if (ELEM(medge->v1, mfaceindices[j], mfaceindices[k]) &&
 							ELEM(medge->v2, mfaceindices[j], mfaceindices[k])) {
-							meshobj->AddLine(meshmat, indices[j], indices[k]);
+							rasobj->AddLine(meshmat, indices[j], indices[k]);
 							break;
 						}
 					}
 				}
 			}
-			meshobj->AddPolygon(meshmat, nverts, indices, visible, collider, twoside);
+			rasobj->AddPolygon(meshmat, nverts, indices, visible, collider, twoside);
 		}
 
 		if (tface) 
@@ -719,21 +719,21 @@ RAS_GameObject* BL_ConvertMesh(Mesh* mesh, Object* blenderobj, KX_Scene* scene, 
 	// keep meshobj->m_sharedvertex_map for reinstance phys mesh.
 	// 2.49a and before it did: meshobj->m_sharedvertex_map.clear();
 	// but this didnt save much ram. - Campbell
-	meshobj->EndConversion(scene->GetBoundingBoxManager());
+	rasobj->EndConversion(scene->GetBoundingBoxManager());
 
 	// pre calculate texture generation
 	// However, we want to delay this if we're libloading so we can make sure we have the right scene.
 	if (!libloading) {
-		for (unsigned short i = 0, num = meshobj->NumMaterials(); i < num; ++i) {
-			RAS_MeshMaterial *mmat = meshobj->GetMeshMaterial(i);
+		for (unsigned short i = 0, num = rasobj->NumMaterials(); i < num; ++i) {
+			RAS_MeshMaterial *mmat = rasobj->GetMeshMaterial(i);
 			mmat->GetBucket()->GetPolyMaterial()->OnConstruction();
 		}
 	}
 
 	dm->release(dm);
 
-	converter.RegisterGameMesh(meshobj, mesh);
-	return meshobj;
+	converter.RegisterRasObj(rasobj, mesh);
+	return rasobj;
 }
 
 static PHY_ShapeProps *CreateShapePropsFromBlenderObject(struct Object* blenderobject)
@@ -1014,7 +1014,7 @@ static KX_GameObject *gameobject_from_blenderobject(
 	case OB_MESH:
 	{
 		Mesh* mesh = static_cast<Mesh*>(ob->data);
-		RAS_GameObject* meshobj = BL_ConvertMesh(mesh, ob, kxscene, rasty, converter, libloading);
+		RAS_GameObject* meshobj = BL_ConvertRasGameObj(mesh, ob, kxscene, rasty, converter, libloading);
 		
 		// needed for python scripting
 		kxscene->GetLogicManager()->RegisterMeshName(meshobj->GetName(),meshobj);
@@ -1071,7 +1071,7 @@ static KX_GameObject *gameobject_from_blenderobject(
 		else if (bHasDvert) {
 			// this case correspond to a mesh that can potentially deform but not with the
 			// object to which it is attached for the moment. A skin mesh was created in
-			// BL_ConvertMesh() so must create a deformer too!
+			// BL_ConvertRasGameObj() so must create a deformer too!
 			deformer = new BL_MeshDeformer(deformableGameObj, ob, meshobj);
 		}
 #ifdef WITH_BULLET

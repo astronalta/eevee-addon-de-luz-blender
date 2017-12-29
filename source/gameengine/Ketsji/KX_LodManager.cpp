@@ -120,7 +120,7 @@ KX_LodManager::KX_LodManager(Object *ob, KX_Scene *scene, RAS_Rasterizer *rasty,
 				flag |= KX_LodLevel::USE_MATERIAL;
 			}
 			KX_LodLevel *lodLevel = new KX_LodLevel(lod->distance, lod->obhysteresis, level++,
-				BL_ConvertMesh(lodmesh, lodmatob, scene, rasty, converter, libloading), flag);
+				BL_ConvertRasGameObj(lodmesh, lodmatob, scene, rasty, converter, libloading), flag);
 
 			m_levels.push_back(lodLevel);
 		}

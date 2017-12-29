@@ -79,8 +79,8 @@ public:
 	void UnregisterGameObject(KX_GameObject *gameobject);
 	KX_GameObject *FindGameObject(Object *for_blenderobject);
 
-	void RegisterGameMesh(RAS_GameObject *gamemesh, Mesh *for_blendermesh);
-	RAS_GameObject *FindGameMesh(Mesh *for_blendermesh);
+	void RegisterRasObj(RAS_GameObject *gamemesh, Mesh *for_blendermesh);
+	RAS_GameObject *FindRasObj(Mesh *for_blendermesh);
 
 	void RegisterMaterial(KX_BlenderMaterial *blmat, Material *mat);
 	KX_BlenderMaterial *FindMaterial(Material *mat);
